@@ -1,8 +1,14 @@
 package com.slack.jeanpokou.sunshine
 
+import android.content.Context
+import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.slack.jeanpokou.sunshine.utilities.NetworkUtils
 import kotlinx.android.synthetic.main.activity_forecast.*
+import java.io.IOException
+import java.net.URI
+import java.net.URL
 
 class forecast : AppCompatActivity() {
 
@@ -11,7 +17,8 @@ class forecast : AppCompatActivity() {
         setContentView(R.layout.activity_forecast)
 
 
-        val fakeWeatherData = arrayListOf(
+
+       /* val fakeWeatherData = arrayListOf(
                 "Today, May 17 - Clear - 17°C / 15°C",
                 "Tomorrow - Cloudy - 19°C / 15°C",
                 "Thursday - Rainy- 30°C / 11°C",
@@ -32,6 +39,37 @@ class forecast : AppCompatActivity() {
         fakeWeatherData.forEach({it ->
             tv_weather_data.append( it+ "\n")
         })
+        */
+
+
+         class FecthWeatherTask : AsyncTask<String,Void,Array<String>>(){
+
+             override fun doInBackground(vararg p0: String?): Array<String> {
+
+
+                 /*
+                 val location  =  p0[0]
+                 location?.let {
+                     val weatherRequestUrl : URL? = NetworkUtils.buildUrl(location)
+                     weatherRequestUrl?.let {
+                         try {
+
+                             val  jsonWeatherData = NetworkUtils.getResponseFromHttpUrl(weatherRequestUrl)
+                             //return jsonWeatherData
+                         } catch (ex : IOException){
+                             ex.printStackTrace()
+                         }
+
+
+                     }
+
+
+                 }
+*/
+                 return arrayOf()
+             }
+
+         }
 
 
 
