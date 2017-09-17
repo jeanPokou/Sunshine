@@ -4,60 +4,39 @@ import android.content.Context
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.slack.jeanpokou.sunshine.utilities.NetworkUtils
 import kotlinx.android.synthetic.main.activity_forecast.*
 import java.io.IOException
-import java.net.URI
 import java.net.URL
 
 class forecast : AppCompatActivity() {
+
+    private val TAG = forecast::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
 
+       FecthWeatherTask().execute("Abidjan")
+    }
 
-
-       /* val fakeWeatherData = arrayListOf(
-                "Today, May 17 - Clear - 17°C / 15°C",
-                "Tomorrow - Cloudy - 19°C / 15°C",
-                "Thursday - Rainy- 30°C / 11°C",
-                "Friday - Thunderstorms - 21°C / 9°C",
-                "Saturday - Thunderstorms - 16°C / 7°C",
-                "Sunday - Rainy - 16°C / 8°C",
-                "Monday - Partly Cloudy - 15°C / 10°C",
-                "Tue, May 24 - Meatballs - 16°C / 18°C",
-                "Wed, May 25 - Cloudy - 19°C / 15°C",
-                "Thu, May 26 - Stormy - 30°C / 11°C",
-                "Fri, May 27 - Hurricane - 21°C / 9°C",
-                "Sat, May 28 - Meteors - 16°C / 7°C",
-                "Sun, May 29 - Apocalypse - 16°C / 8°C",
-                "Mon, May 30 - Post Apocalypse - 15°C / 10°C"
-
-        )
-
-        fakeWeatherData.forEach({it ->
-            tv_weather_data.append( it+ "\n")
-        })
-        */
-
-
-         class FecthWeatherTask : AsyncTask<String,Void,Array<String>>(){
+      inner class FecthWeatherTask : AsyncTask<String,Void,Array<String>>(){
 
              override fun doInBackground(vararg p0: String?): Array<String> {
 
-
-                 /*
                  val location  =  p0[0]
+
                  location?.let {
                      val weatherRequestUrl : URL? = NetworkUtils.buildUrl(location)
                      weatherRequestUrl?.let {
-                         try {
-
-                             val  jsonWeatherData = NetworkUtils.getResponseFromHttpUrl(weatherRequestUrl)
-                             //return jsonWeatherData
+                         return try {
+                             arrayOf(
+                                     NetworkUtils.getResponseFromHttpUrl(weatherRequestUrl)
+                             )
                          } catch (ex : IOException){
-                             ex.printStackTrace()
+                             //error("ERROR GETTING WEATHER DATA")
+                             throw ex
                          }
 
 
@@ -65,13 +44,22 @@ class forecast : AppCompatActivity() {
 
 
                  }
-*/
+
                  return arrayOf()
              }
+
+
+          override fun onPostExecute(result: Array<String>?) {
+              result?.let {
+                  Log.v(TAG, result[0])
+              }
+              super.onPostExecute(result)
+          }
+
 
          }
 
 
 
-    }
+
 }

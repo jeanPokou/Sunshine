@@ -1,19 +1,20 @@
 package com.slack.jeanpokou.sunshine.utilities
 
 import android.net.Uri
+import android.util.Log
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
-import java.util.*
 
 object NetworkUtils {
 
     private val TAG = NetworkUtils::class.java.simpleName
 
-    private val DYNAMIC_WEATHER_URL = "https://andfun-weather.udacity.com/weather"
+    //private val DYNAMIC_WEATHER_URL = "https://andfun-weather.udacity.com/weather"
+    private val JEANPOKOU_OPENWEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast"
 
-    private val FORECAST_BASE_URL = DYNAMIC_WEATHER_URL
+    private val FORECAST_BASE_URL = JEANPOKOU_OPENWEATHER_URL
 
     /*
      * NOTE: These values only effect responses from OpenWeatherMap, NOT from the fake weather
@@ -28,6 +29,8 @@ object NetworkUtils {
     private val units = "metric"
     /* The number of days we want our API to return */
     private val numDays = 14
+    /* APIKEY for Open Weather Data*/
+    private val APIKEY= "35e5a76f59f2f5c1d6e4ba7939944535"
 
     internal val QUERY_PARAM = "q"
     internal val LAT_PARAM = "lat"
@@ -35,6 +38,10 @@ object NetworkUtils {
     internal val FORMAT_PARAM = "mode"
     internal val UNITS_PARAM = "units"
     internal val DAYS_PARAM = "cnt"
+    internal val API_ID = "APPID"
+
+
+
 
     /**
      * Builds the URL used to talk to the weather server using a location. This location is based
@@ -43,19 +50,29 @@ object NetworkUtils {
      * @param locationQuery The location that will be queried for.
      * @return The URL to use to query the weather server.
      */
-    fun buildUrl(locationQuery: String): URL? {
-        val uri = Uri.parse(DYNAMIC_WEATHER_URL)
+    @Throws (MalformedURLException::class)
+    fun buildUrl(locationQuery: String): URL {
+        val uri = Uri.parse(FORECAST_BASE_URL)
                 .buildUpon()
                 .appendQueryParameter(QUERY_PARAM, locationQuery)
+                .appendQueryParameter(API_ID, APIKEY)
+                .appendQueryParameter(FORMAT_PARAM, format)
+                .appendQueryParameter(UNITS_PARAM, units)
+                .appendQueryParameter(DAYS_PARAM, numDays.toString())
                 .build()
-        var url: URL? = null
-        try {
-            url = URL(uri.toString())
-        } catch (ex: MalformedURLException) {
-            ex.printStackTrace()
-        }
 
-        return url
+
+         return try {
+             Log.v(TAG, uri.toString())
+             getURL(uri.toString())
+        } catch (ex: MalformedURLException) {
+             error( "Error building location url")
+        }
+    }
+
+
+    private  fun getURL (url : String ) : URL {
+        return  URL(url)
     }
 
     /**
@@ -79,22 +96,10 @@ object NetworkUtils {
      * @throws IOException Related to network and stream reading
      */
     @Throws(IOException::class)
-    fun getResponseFromHttpUrl(url: URL): String? {
-        val urlConnection = url.openConnection() as HttpURLConnection
-        try {
-            val `in` = urlConnection.inputStream
-
-            val scanner = Scanner(`in`)
-            scanner.useDelimiter("\\A")
-
-            val hasInput = scanner.hasNext()
-            return if (hasInput) {
-                scanner.next()
-            } else {
-                null
-            }
-        } finally {
-            urlConnection.disconnect()
+    fun getResponseFromHttpUrl(url: URL): String {
+        val connection = url.openConnection() as HttpURLConnection
+        return connection.inputStream.bufferedReader().use {
+            it.readText()
         }
     }
 }
