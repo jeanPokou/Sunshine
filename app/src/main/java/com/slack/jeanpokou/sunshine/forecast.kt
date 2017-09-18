@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import com.slack.jeanpokou.sunshine.data.SunshinePreferences
 import com.slack.jeanpokou.sunshine.utilities.NetworkUtils
 import kotlinx.android.synthetic.main.activity_forecast.*
 import org.jetbrains.anko.toast
@@ -34,17 +36,39 @@ class forecast : AppCompatActivity() {
             R.id.action_refresh -> {
                 toast("Refreshing Location Request ")
                 // Fetch Weather Request
-                FecthWeatherTask().execute("Abidjan")
+                loadWeatherData()
             }
         }
 
         return super.onOptionsItemSelected(item)
     }
 
+    private  fun loadWeatherData() {
+        showWeatherData()
+        FecthWeatherTask().execute(SunshinePreferences.PREF_CITY_NAME)
+
+    }
+
+    private fun showErrorMessage() {
+        error_message.visibility = View.VISIBLE
+        tv_weather_data.visibility = View.INVISIBLE
+    }
+
+    private fun showWeatherData(){
+        error_message.visibility = View.INVISIBLE
+        tv_weather_data.visibility = View.VISIBLE
+    }
+
+
     /*
     *   AsyncTask for Handling Location Network Request
      */
       inner class FecthWeatherTask : AsyncTask<String,Void,Array<String>>(){
+
+        override fun onPreExecute() {
+            progress_bar.visibility = View.VISIBLE
+            super.onPreExecute()
+        }
 
              override fun doInBackground(vararg p0: String?): Array<String> {
 
@@ -67,14 +91,15 @@ class forecast : AppCompatActivity() {
 
 
                  }
-
+                 showErrorMessage()
                  return arrayOf()
              }
 
 
           override fun onPostExecute(result: Array<String>?) {
+              progress_bar.visibility = View.INVISIBLE
               result?.let {
-
+                  showWeatherData()
                   result.forEach {
                       tv_weather_data.append(it)
                   }

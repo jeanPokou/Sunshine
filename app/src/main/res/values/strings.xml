@@ -2,8 +2,11 @@
     <!--  App Name  -->
     <string name="app_name">SunShine</string>
 
-    <!--  App Name  -->
+    <!--   Refresh Menu Button  -->
     <string name="Refresh" >Refresh</string>
+
+    <!--   ERROR MESSAGE  -->
+    <string name="error_message" >ERROR GETTING DATA </string>
 
 
 </resources>
