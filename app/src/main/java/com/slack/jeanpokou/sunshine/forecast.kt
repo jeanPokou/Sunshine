@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -22,6 +23,8 @@ class forecast : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
+
+
 
     }
 
@@ -51,12 +54,14 @@ class forecast : AppCompatActivity() {
 
     private fun showErrorMessage() {
         error_message.visibility = View.VISIBLE
-        tv_weather_data.visibility = View.INVISIBLE
+//        tv_weather_data.visibility = View.INVISIBLE
+        recyclerview_forecast.visibility = View.INVISIBLE
     }
 
     private fun showWeatherData(){
         error_message.visibility = View.INVISIBLE
-        tv_weather_data.visibility = View.VISIBLE
+//        tv_weather_data.visibility = View.VISIBLE
+        recyclerview_forecast.visibility = View.VISIBLE
     }
 
 
@@ -100,9 +105,16 @@ class forecast : AppCompatActivity() {
               progress_bar.visibility = View.INVISIBLE
               result?.let {
                   showWeatherData()
-                  result.forEach {
-                      tv_weather_data.append(it)
-                  }
+
+                   with(recyclerview_forecast) {
+                       adapter = ForecastAdapter(result)
+                      layoutManager = LinearLayoutManager(this@forecast,LinearLayoutManager.VERTICAL,false)
+                       hasFixedSize()
+                   }
+
+//                  result.forEach {
+//                      tv_weather_data.append(it)
+//                  }
                   Log.v(TAG, result[0])
               }
               super.onPostExecute(result)
