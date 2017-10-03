@@ -1,12 +1,13 @@
 package com.slack.jeanpokou.sunshine
 
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.jetbrains.anko.find
 
-class ForecastAdapter( private  val mWeatherData:Array<String>?): RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>(){
+class ForecastAdapter( private  var mWeatherData:Array<String>?): RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>(){
 
 
     // Happen when a new item is added to the RecyclerView
@@ -19,7 +20,8 @@ class ForecastAdapter( private  val mWeatherData:Array<String>?): RecyclerView.A
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ForecastViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return ForecastViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.forecast_list_item,parent,false))
+
     }
 
 
@@ -30,6 +32,10 @@ class ForecastAdapter( private  val mWeatherData:Array<String>?): RecyclerView.A
             }
         }
 
+    }
+    fun setmWeatherData( data : Array<String>){
+        mWeatherData = data
+        notifyDataSetChanged()
     }
 
 }

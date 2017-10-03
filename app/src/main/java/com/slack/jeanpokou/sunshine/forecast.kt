@@ -20,9 +20,16 @@ class forecast : AppCompatActivity() {
 
     private val TAG = forecast::class.java.simpleName
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
+
+          with(recyclerview_forecast) {
+                      layoutManager = LinearLayoutManager(this@forecast,LinearLayoutManager.VERTICAL,false)
+                       hasFixedSize()
+                   }
+
 
 
 
@@ -106,24 +113,20 @@ class forecast : AppCompatActivity() {
               result?.let {
                   showWeatherData()
 
-                   with(recyclerview_forecast) {
-                       adapter = ForecastAdapter(result)
-                      layoutManager = LinearLayoutManager(this@forecast,LinearLayoutManager.VERTICAL,false)
-                       hasFixedSize()
-                   }
+                  recyclerview_forecast.adapter = ForecastAdapter(result)
+
 
 //                  result.forEach {
-//                      tv_weather_data.append(it)
+//                     // tv_weather_data.append(it)
+//                      Log.v(TAG,it)
 //                  }
-                  Log.v(TAG, result[0])
+//                  Log.v(TAG, result[0])
               }
               super.onPostExecute(result)
           }
 
 
          }
-
-
 
 
 }
