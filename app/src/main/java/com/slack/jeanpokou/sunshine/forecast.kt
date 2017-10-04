@@ -112,8 +112,17 @@ class forecast : AppCompatActivity() {
               progress_bar.visibility = View.INVISIBLE
               result?.let {
                   showWeatherData()
+                  with(recyclerview_forecast) {
+                      adapter = ForecastAdapter(
+                              result,
+                               object:ForecastAdapter.ListItemClickedListener{
+                                   override fun onListItemClicked(item: String) {
+                                      toast(item)
+                                   }
 
-                  recyclerview_forecast.adapter = ForecastAdapter(result)
+                              }
+                      )
+                  }
 
 
 //                  result.forEach {
